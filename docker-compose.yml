@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+ carousel:
+  build:
+   context: .
+  ports:
+   - 8080:3004
+  environment:
+   - CONNECTIONSTRING=mongodb://mongo:27017/carousel
+  volumes:
+   - ./:/code
+ mongo:
+  image: mongo:4.2.8
+  ports:
+   - 27017:27017
+  volumes:
+   - mongodb:/data/db
+   - mongodb_config:/data/configdb
+volumes:
+ mongodb:
+ mongodb_config:
