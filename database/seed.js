@@ -47,20 +47,37 @@ const getListData = () => {
   return listArray;
 };
 
+let recordsCreated = 0;
+
 const SampleData = () => {
-  for (let i = 1; i <= 100; i++) {
-    const imgSet = getPictures();
-    const staySet = getListData();
+  // for (let i = 1; i <= 100; i++) {
+  // for (let i = 1; i <= 1; i++) {
+  const imgSet = getPictures();
+  const staySet = getListData();
 
-    const newCarousel = new db.CarouselModel({
-      _id: i,
-      id: i,
-      ImgUrls: imgSet,
-      stayList: staySet,
+  const newCarousel = new db.CarouselModel({
+    // _id: recordsCreated,
+    id: recordsCreated,
+    ImgUrls: imgSet,
+    stayList: staySet,
+  });
+
+  newCarousel.save()
+    .then(() => {
+      recordsCreated += 1;
+      console.log(`Records created: ${recordsCreated}`);
+      if (recordsCreated <= 100) {
+        SampleData();
+      } else {
+        console.log('Seeding compete!');
+        process.exit();
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      process.exit();
     });
-
-    newCarousel.save();
-  }
+  // }
 };
 
 SampleData();
