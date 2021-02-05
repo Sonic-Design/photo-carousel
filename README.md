@@ -33,7 +33,7 @@
   * `/api/lists?type=list`
     * POST new list and set listing as first associated listing
       * Query string parameter:
-        * type=list
+        * `type=list`
       * `application/JSON` body:
         ```json
         {
@@ -130,7 +130,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>listings</code></strong>
+        <strong>Table 1: <code>listings</code></strong>
       </td>
     </tr>
     <tr>
@@ -152,6 +152,8 @@
       </td>
       <td>
         <code>INT PRIMARY KEY</code>
+      </td>
+      <td>
       </td>
     </tr>
     <tr>
@@ -223,7 +225,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>related_listings</code></strong>
+        <strong>Table 2: <code>related_listings</code></strong>
       </td>
     </tr>
     <tr>
@@ -278,7 +280,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>images</code></strong>
+        <strong>Table 3: <code>images</code></strong>
       </td>
     </tr>
     <tr>
@@ -352,7 +354,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>lists</code></strong>
+        <strong>Table 4: <code>lists</code></strong>
       </td>
     </tr>
     <tr>
@@ -416,7 +418,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>hosts</code></strong>
+        <strong>Table 5: <code>hosts</code></strong>
       </td>
     </tr>
     <tr>
