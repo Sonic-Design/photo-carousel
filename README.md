@@ -4,10 +4,9 @@
 
 ## Related Projects
 
-  - https://github.com/The-Casuals/reviews
-  - https://github.com/The-Casuals/casual-checkout-service
-  - https://github.com/The-Casuals/photo_gallery
-  - https://github.com/The-Casuals/photo_carousel
+  - https://github.com/Sonic-Design/reviews
+  - https://github.com/Sonic-Design/checkout-calendar
+  - https://github.com/Sonic-Design/photoGallery
 
 ## Table of Contents
 
