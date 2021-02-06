@@ -11,9 +11,9 @@
 ## Table of Contents
 
 * [API](#API)
-  * [/api/properties/:propertyId/nearby](#/api/properties/:propertyId/nearby)
-  * [/api/users/:userId/lists](#/api/users/:userId/lists)
-  * [/api/users/:userId/lists/:listId](#/api/users/:userId/lists/:listId)
+  * [/api/properties/:propertyId/nearby](#apipropertiespropertyidnearby)
+  * [/api/users/:userId/lists](#apiusersuseridlists)
+  * [/api/users/:userId/lists/:listId](#apiusersuseridlistslistid)
 * [Database management system](#Database-management-system)
 * [Database schema](#Database-schema)
   * [Table 1](#Table-1)
