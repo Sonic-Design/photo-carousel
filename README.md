@@ -10,181 +10,194 @@
 
 ## Table of Contents
 
-1. [API](#API)
-2. [Database management system](#Database-management-system)
-3. [Database schema](#Database-schema)
-4. [Legacy](#Legacy)
+* [API](#API)
+  * [/api/properties/:propertyId/nearby](#/api/properties/:propertyId/nearby)
+  * [/api/users/:userId/lists](#/api/users/:userId/lists)
+  * [/api/users/:userId/lists/:listId](#/api/users/:userId/lists/:listId)
+* [Database management system](#Database-management-system)
+* [Database schema](#Database-schema)
+  * [Table 1](#Table-1)
+  * [Table 2](#Table-2)
+  * [Table 3](#Table-3)
+  * [Table 4](#Table-4)
+  * [Table 5](#Table-5)
+* [Legacy](#Legacy)
 
 ## API
 
-* **`/api/properties/:propertyId/nearby`**
-  * GET data for properties that are nearby current property, including whether each nearby property is associated with a list
-    * Route parameter:
-      * ID number for the current property
-    * Request body: n/a
-    * Response:
-      * Fields:
-        * `stayList`
-          * array
-            * `stayId`
-            * `stayName`
-            * `stayPic`
-        * `ImgUrls`
-          * array
-            * `id`
-            * `imgUrl`
-            * `imgName`
-            * `imgDescription`
-            * `HouseType`
-            * `description`
-            * `isSuperHost`
-            * `isLiked`
-            * `AverageRating`
-            * `NumberOfBeds`
-            * `NumOfReviews`
-            * `PricePerNight`
-      * Example:
-        ```json
-        [
-          {
-            "stayList": [
-              {
-                "stayId": 0,
-                "stayName": "Florida",
-                "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
-              },
-              // ...
-            ],
-            "ImgUrls": [
-              {
-                "id": 0,
-                "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
-                "imgName": "Dayna_OReilly",
-                "imgDescription": "Legacy",
-                "HouseType": "ab",
-                "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
-                "isSuperHost": true,
-                "isLiked": false,
-                "AverageRating": "2.42",
-                "NumberOfBeds": 5,
-                "NumOfReviews": 183,
-                "PricePerNight": 171
-              },
-              // ...
-            ],
-            "_id": "601b952e65f325616b41d429",
-            "id": 1,
-            "__v": 0
-          }
-        ]
-        ```
-* **`/api/users/:userId/lists`**
-  * GET lists of properties
-    * Route parameter:
-      * User ID number
-    * Request body: n/a
-    * Response:
-      * Fields:
-        * `stayList`
-          * array
-            * `stayId`
-            * `stayName`
-            * `stayPic`
-        * `ImgUrls`
-          * array
-            * `id`
-            * `imgUrl`
-            * `imgName`
-            * `imgDescription`
-            * `HouseType`
-            * `description`
-            * `isSuperHost`
-            * `isLiked`
-            * `AverageRating`
-            * `NumberOfBeds`
-            * `NumOfReviews`
-            * `PricePerNight`
-      * Example:
-        ```json
-        [
-          {
-            "stayList": [
-              {
-                "stayId": 0,
-                "stayName": "Florida",
-                "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
-              },
-              // ...
-            ],
-            "ImgUrls": [
-              {
-                "id": 0,
-                "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
-                "imgName": "Dayna_OReilly",
-                "imgDescription": "Legacy",
-                "HouseType": "ab",
-                "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
-                "isSuperHost": true,
-                "isLiked": false,
-                "AverageRating": "2.42",
-                "NumberOfBeds": 5,
-                "NumOfReviews": 183,
-                "PricePerNight": 171
-              },
-              // ...
-            ],
-            "_id": "601b952e65f325616b41d429",
-            "id": 1,
-            "__v": 0
-          }
-        ]
-        ```
-  * POST new list and associate property with list
-    * Route parameter:
-      * User ID number
-    * Request body:
+### **`/api/properties/:propertyId/nearby`**
+
+* GET data for properties that are nearby current property, including whether each nearby property is associated with a list
+  * Route parameter:
+    * ID number for the current property
+  * Request body: n/a
+  * Response:
+    * Fields:
+      * `stayList`
+        * array
+          * `stayId`
+          * `stayName`
+          * `stayPic`
+      * `ImgUrls`
+        * array
+          * `id`
+          * `imgUrl`
+          * `imgName`
+          * `imgDescription`
+          * `HouseType`
+          * `description`
+          * `isSuperHost`
+          * `isLiked`
+          * `AverageRating`
+          * `NumberOfBeds`
+          * `NumOfReviews`
+          * `PricePerNight`
+    * Example:
       ```json
-      {
-        "propertyId": "<property_id>",
-        "name": "<list_name>"
-      }
+      [
+        {
+          "stayList": [
+            {
+              "stayId": 0,
+              "stayName": "Florida",
+              "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
+            },
+            // ...
+          ],
+          "ImgUrls": [
+            {
+              "id": 0,
+              "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
+              "imgName": "Dayna_OReilly",
+              "imgDescription": "Legacy",
+              "HouseType": "ab",
+              "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
+              "isSuperHost": true,
+              "isLiked": false,
+              "AverageRating": "2.42",
+              "NumberOfBeds": 5,
+              "NumOfReviews": 183,
+              "PricePerNight": 171
+            },
+            // ...
+          ],
+          "_id": "601b952e65f325616b41d429",
+          "id": 1,
+          "__v": 0
+        }
+      ]
       ```
-    * Response:
-      * Fields:
-        * TBC
-      * Example:
-        * TBC
-* **`/api/users/:userId/lists/:listId`**
-  * POST new association between property and list
-    * Route parameters:
-      * User ID number
-      * List ID number
-    * Request body:
+
+### **`/api/users/:userId/lists`**
+
+* GET lists of properties
+  * Route parameter:
+    * User ID number
+  * Request body: n/a
+  * Response:
+    * Fields:
+      * `stayList`
+        * array
+          * `stayId`
+          * `stayName`
+          * `stayPic`
+      * `ImgUrls`
+        * array
+          * `id`
+          * `imgUrl`
+          * `imgName`
+          * `imgDescription`
+          * `HouseType`
+          * `description`
+          * `isSuperHost`
+          * `isLiked`
+          * `AverageRating`
+          * `NumberOfBeds`
+          * `NumOfReviews`
+          * `PricePerNight`
+    * Example:
       ```json
-      {
-        "propertyId": "<property_id>"
-      }
+      [
+        {
+          "stayList": [
+            {
+              "stayId": 0,
+              "stayName": "Florida",
+              "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
+            },
+            // ...
+          ],
+          "ImgUrls": [
+            {
+              "id": 0,
+              "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
+              "imgName": "Dayna_OReilly",
+              "imgDescription": "Legacy",
+              "HouseType": "ab",
+              "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
+              "isSuperHost": true,
+              "isLiked": false,
+              "AverageRating": "2.42",
+              "NumberOfBeds": 5,
+              "NumOfReviews": 183,
+              "PricePerNight": 171
+            },
+            // ...
+          ],
+          "_id": "601b952e65f325616b41d429",
+          "id": 1,
+          "__v": 0
+        }
+      ]
       ```
-    * Response:
-      * Fields:
-        * TBC
-      * Example:
-        * TBC
-  * DELETE association between property and list
-    * Route parameters:
-      * User ID number
-      * List ID number
-    * Request body:
-      ```json
-      {
-        "propertyId": "<property_id>"
-      }
-      ```
-    * Response:
-      * Fields:
-        * TBC
-      * Example:
-        * TBC
+* POST new list and associate property with list
+  * Route parameter:
+    * User ID number
+  * Request body:
+    ```json
+    {
+      "propertyId": "<property_id>",
+      "name": "<list_name>"
+    }
+    ```
+  * Response:
+    * Fields:
+      * TBC
+    * Example:
+      * TBC
+
+### **`/api/users/:userId/lists/:listId`**
+
+* POST new association between property and list
+  * Route parameters:
+    * User ID number
+    * List ID number
+  * Request body:
+    ```json
+    {
+      "propertyId": "<property_id>"
+    }
+    ```
+  * Response:
+    * Fields:
+      * TBC
+    * Example:
+      * TBC
+* DELETE association between property and list
+  * Route parameters:
+    * User ID number
+    * List ID number
+  * Request body:
+    ```json
+    {
+      "propertyId": "<property_id>"
+    }
+    ```
+  * Response:
+    * Fields:
+      * TBC
+    * Example:
+      * TBC
 
 ## Database management system
 
@@ -192,11 +205,13 @@
 
 ## Database schema
 
+### Table 1
+
 <table>
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 1: <code>properties</code></strong>
+        <strong><code>properties</code></strong>
       </td>
     </tr>
     <tr>
@@ -316,11 +331,13 @@
   </tbody>
 </table>
 
+### Table 2
+
 <table>
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 2: <code>nearby_properties</code></strong>
+        <strong><code>nearby_properties</code></strong>
       </td>
     </tr>
     <tr>
@@ -371,11 +388,13 @@
   </tbody>
 </table>
 
+### Table 3
+
 <table>
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 3: <code>properties_lists</code></strong>
+        <strong><code>properties_lists</code></strong>
       </td>
     </tr>
     <tr>
@@ -426,11 +445,13 @@
   </tbody>
 </table>
 
+### Table 4
+
 <table>
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 4: <code>lists</code></strong>
+        <strong><code>lists</code></strong>
       </td>
     </tr>
     <tr>
@@ -490,11 +511,13 @@
   </tbody>
 </table>
 
+### Table 5
+
 <table>
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 5: <code>users</code></strong>
+        <strong><code>users</code></strong>
       </td>
     </tr>
     <tr>
