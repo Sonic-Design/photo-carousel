@@ -27,7 +27,7 @@
 
 ### **`/api/properties/:propertyId/nearby`**
 
-* GET data for properties that are nearby current property, including whether each nearby property is associated with a list
+* **GET** data for properties that are nearby current property, including whether each nearby property is associated with a list
   * Route parameter:
     * ID number for the current property
   * Request body: n/a
@@ -90,7 +90,7 @@
 
 ### **`/api/users/:userId/lists`**
 
-* GET lists of properties
+* **GET** lists of properties
   * Route parameter:
     * User ID number
   * Request body: n/a
@@ -150,7 +150,7 @@
         }
       ]
       ```
-* POST new list and associate property with list
+* **POST** new list and associate property with list
   * Route parameter:
     * User ID number
   * Request body:
@@ -162,13 +162,13 @@
     ```
   * Response:
     * Fields:
-      * TBC
+      * *TBC*
     * Example:
-      * TBC
+      * *TBC*
 
 ### **`/api/users/:userId/lists/:listId`**
 
-* POST new association between property and list
+* **POST** new association between property and list
   * Route parameters:
     * User ID number
     * List ID number
@@ -180,10 +180,10 @@
     ```
   * Response:
     * Fields:
-      * TBC
+      * *TBC*
     * Example:
-      * TBC
-* DELETE association between property and list
+      * *TBC*
+* **DELETE** association between property and list
   * Route parameters:
     * User ID number
     * List ID number
@@ -195,9 +195,9 @@
     ```
   * Response:
     * Fields:
-      * TBC
+      * *TBC*
     * Example:
-      * TBC
+      * *TBC*
 
 ## Database management system
 
