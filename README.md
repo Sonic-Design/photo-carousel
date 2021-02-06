@@ -17,108 +17,174 @@
 
 ## API
 
-* **`/api/listings`**
-  * `/api/listings/<listing_id>`
-    * GET data for current listing on page load
-      * Route parameter:
-        * ID number for the current listing
-* **`/api/relatedListings`**
-  * `/api/relatedListings/<listing_id>`
-    * GET data for listings that are related to current listing, including whether each related listing is associated with a list
-      * Route parameter:
-        * ID number for the current listing
-* **`/api/lists`**
-  * `/api/lists`
-    * GET lists and, where applicable, the list categories under which they are grouped
-  * `/api/lists?type=list`
-    * POST new list and set listing as first associated listing
-      * Query string parameter:
-        * `type=list`
-      * `application/JSON` body:
+* **`/api/properties/:propertyId/nearby`**
+  * GET data for properties that are nearby current property, including whether each nearby property is associated with a list
+    * Route parameter:
+      * ID number for the current property
+    * Request body: n/a
+    * Response:
+      * Fields:
+        * `stayList`
+          * array
+            * `stayId`
+            * `stayName`
+            * `stayPic`
+        * `ImgUrls`
+          * array
+            * `id`
+            * `imgUrl`
+            * `imgName`
+            * `imgDescription`
+            * `HouseType`
+            * `description`
+            * `isSuperHost`
+            * `isLiked`
+            * `AverageRating`
+            * `NumberOfBeds`
+            * `NumOfReviews`
+            * `PricePerNight`
+      * Example:
         ```json
-        {
-          "listingId": "<listing_id>",
-          "name": "<list_name>"
-        }
+        [
+          {
+            "stayList": [
+              {
+                "stayId": 0,
+                "stayName": "Florida",
+                "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
+              },
+              // ...
+            ],
+            "ImgUrls": [
+              {
+                "id": 0,
+                "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
+                "imgName": "Dayna_OReilly",
+                "imgDescription": "Legacy",
+                "HouseType": "ab",
+                "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
+                "isSuperHost": true,
+                "isLiked": false,
+                "AverageRating": "2.42",
+                "NumberOfBeds": 5,
+                "NumOfReviews": 183,
+                "PricePerNight": 171
+              },
+              // ...
+            ],
+            "_id": "601b952e65f325616b41d429",
+            "id": 1,
+            "__v": 0
+          }
+        ]
         ```
-  * **`/api/lists?type=category`**
-    * `/api/lists?type=category`
-      * POST new list category and associate list
-        * Query string parameter:
-          * `type=category`
-        * `application/JSON` body:
-          ```json
+* **`/api/users/:userId/lists`**
+  * GET lists of properties
+    * Route parameter:
+      * User ID number
+    * Request body: n/a
+    * Response:
+      * Fields:
+        * `stayList`
+          * array
+            * `stayId`
+            * `stayName`
+            * `stayPic`
+        * `ImgUrls`
+          * array
+            * `id`
+            * `imgUrl`
+            * `imgName`
+            * `imgDescription`
+            * `HouseType`
+            * `description`
+            * `isSuperHost`
+            * `isLiked`
+            * `AverageRating`
+            * `NumberOfBeds`
+            * `NumOfReviews`
+            * `PricePerNight`
+      * Example:
+        ```json
+        [
           {
-            "listId": "<list_id>",
-            "name": "<list_category_name>"
+            "stayList": [
+              {
+                "stayId": 0,
+                "stayName": "Florida",
+                "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
+              },
+              // ...
+            ],
+            "ImgUrls": [
+              {
+                "id": 0,
+                "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
+                "imgName": "Dayna_OReilly",
+                "imgDescription": "Legacy",
+                "HouseType": "ab",
+                "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
+                "isSuperHost": true,
+                "isLiked": false,
+                "AverageRating": "2.42",
+                "NumberOfBeds": 5,
+                "NumOfReviews": 183,
+                "PricePerNight": 171
+              },
+              // ...
+            ],
+            "_id": "601b952e65f325616b41d429",
+            "id": 1,
+            "__v": 0
           }
-          ```
-    * `/api/lists?type=category&action=add&listId=<list_id>`
-      * PATCH list to be associated with list category
-        * Query string parameters:
-          * `type=category`
-          * `action=add`
-          * `listId=<list_id>`
-        * `application/JSON` body:
-          ```json
-          {
-            "name": "<list_category_name>"
-          }
-          ```
-    * **`/api/lists?type=category&action=remove`**
-      * `/api/lists?type=category&action=remove&listId=<list_id>`
-        * PATCH list to be unassociated from list category
-          * Query string parameters:
-            * `type=category`
-            * `action=remove`
-            * `listId=<list_id>`
-          * `application/JSON` body:
-          ```json
-          {
-            "name": "<list_category_name>"
-          }
-          ```
-      * `/api/lists?type=category&action=remove&listId=all`
-        * PATCH all lists to be unassociated from list category
-          * Query string parameters:
-            * `type=category`
-            * `action=remove`
-            * `listId=all`
-          * `application/JSON` body:
-          ```json
-          {
-            "name": "<list_category_name>"
-          }
-          ```
-    * `/api/lists?type=category&action=rename&orig=<existing_list_category_name>`
-      * PATCH new name for list category
-        * Query string parameters:
-          * `type=category`
-          * `action=rename`
-          * `orig=<existing_list_category_name>`
-        * `application/JSON` body:
-          ```json
-          {
-            "name": "<new_list_category_name>"
-          }
-          ```
-  * **`/api/lists/<list_id>?type=listing`**
-    * `/api/lists/<list_id>?type=listing&action=add&listingId=<listing_id>`
-      * PATCH listing as an associated listing to list
-        * Route parameter:
-          * ID number for the list
-        * Query string parameters:
-          * `type=listing`
-          * `action=add`
-          * `listingId=<listing_id>`
-    * `/api/lists/<list_id>?type=listing&action=remove&listingId=<listing_id>`
-      * PATCH listing as an unassociated listing to list
-        * Route parameter:
-          * ID number for the list
-        * Query string parameters:
-          * `type=listing`
-          * `action=remove`
-          * `listingId=<listing_id>`
+        ]
+        ```
+  * POST new list and associate property with list
+    * Route parameter:
+      * User ID number
+    * Request body:
+      ```json
+      {
+        "propertyId": "<property_id>",
+        "name": "<list_name>"
+      }
+      ```
+    * Response:
+      * Fields:
+        * TBC
+      * Example:
+        * TBC
+* **`/api/users/:userId/lists/:listId`**
+  * POST new association between property and list
+    * Route parameters:
+      * User ID number
+      * List ID number
+    * Request body:
+      ```json
+      {
+        "propertyId": "<property_id>"
+      }
+      ```
+    * Response:
+      * Fields:
+        * TBC
+      * Example:
+        * TBC
+  * DELETE association between property and list
+    * Route parameters:
+      * User ID number
+      * List ID number
+    * Request body:
+      ```json
+      {
+        "propertyId": "<property_id>"
+      }
+      ```
+    * Response:
+      * Fields:
+        * TBC
+      * Example:
+        * TBC
 
 ## Database management system
 
@@ -130,7 +196,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 1: <code>listings</code></strong>
+        <strong>Table 1: <code>properties</code></strong>
       </td>
     </tr>
     <tr>
@@ -158,24 +224,13 @@
     </tr>
     <tr>
       <td>
-        <code>list_id</code>
-      </td>
-      <td>
-        <code>INT FOREIGN KEY</code>
-      </td>
-      <td>
-        <code>lists.id</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
         <code>host_id</code>
       </td>
       <td>
         <code>INT FOREIGN KEY</code>
       </td>
       <td>
-        <code>hosts.id</code>
+        <code>users.id</code>
       </td>
     </tr>
     <tr>
@@ -210,6 +265,16 @@
     </tr>
     <tr>
       <td>
+        <code>house_type</code>
+      </td>
+      <td>
+        <code>VARCHAR(10)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <code>nightly_price</code>
       </td>
       <td>
@@ -218,97 +283,9 @@
       <td>
       </td>
     </tr>
-  </tbody>
-</table>
-
-<table>
-  <thead style="text-align: center">
-    <tr>
-      <td colspan="3">
-        <strong>Table 2: <code>related_listings</code></strong>
-      </td>
-    </tr>
     <tr>
       <td>
-        <strong>Field</strong>
-      </td>
-      <td>
-        <strong>Type</strong>
-      </td>
-      <td>
-        <strong>Ref</strong>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>id</code>
-      </td>
-      <td>
-        <code>INT PRIMARY KEY</code>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>related_listing_id</code>
-      </td>
-      <td>
-        <code>INT</code>
-      </td>
-      <td>
-        (<code>listings.id</code>)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>origin_listing_id</code>
-      </td>
-      <td>
-        <code>INT FOREIGN KEY</code>
-      </td>
-      <td>
-        <code>listings.id</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <thead style="text-align: center">
-    <tr>
-      <td colspan="3">
-        <strong>Table 3: <code>images</code></strong>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Field</strong>
-      </td>
-      <td>
-        <strong>Type</strong>
-      </td>
-      <td>
-        <strong>Ref</strong>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>id</code>
-      </td>
-      <td>
-        <code>INT PRIMARY KEY</code>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>name</code>
+        <code>image_name</code>
       </td>
       <td>
         <code>VARCHAR(50)</code>
@@ -318,7 +295,7 @@
     </tr>
     <tr>
       <td>
-        <code>description</code>
+        <code>image_description</code>
       </td>
       <td>
         <code>VARCHAR(200)</code>
@@ -328,7 +305,7 @@
     </tr>
     <tr>
       <td>
-        <code>url</code>
+        <code>image_url</code>
       </td>
       <td>
         <code>VARCHAR(200)</code>
@@ -336,15 +313,114 @@
       <td>
       </td>
     </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead style="text-align: center">
+    <tr>
+      <td colspan="3">
+        <strong>Table 2: <code>nearby_properties</code></strong>
+      </td>
+    </tr>
     <tr>
       <td>
-        <code>listing_id</code>
+        <strong>Field</strong>
+      </td>
+      <td>
+        <strong>Type</strong>
+      </td>
+      <td>
+        <strong>Ref</strong>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>id</code>
+      </td>
+      <td>
+        <code>INT PRIMARY KEY</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>nearby_property_id</code>
+      </td>
+      <td>
+        <code>INT</code>
+      </td>
+      <td>
+        (<code>properties.id</code>)
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>origin_property_id</code>
       </td>
       <td>
         <code>INT FOREIGN KEY</code>
       </td>
       <td>
-        <code>listings.id</code>
+        <code>properties.id</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead style="text-align: center">
+    <tr>
+      <td colspan="3">
+        <strong>Table 3: <code>properties_lists</code></strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Field</strong>
+      </td>
+      <td>
+        <strong>Type</strong>
+      </td>
+      <td>
+        <strong>Ref</strong>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>id</code>
+      </td>
+      <td>
+        <code>INT PRIMARY KEY</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>property_id</code>
+      </td>
+      <td>
+        <code>INT FOREIGN KEY</code>
+      </td>
+      <td>
+        <code>properties.id</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>list_id</code>
+      </td>
+      <td>
+        <code>INT FOREIGN KEY</code>
+      </td>
+      <td>
+        <code>lists.id</code>
       </td>
     </tr>
   </tbody>
@@ -392,23 +468,23 @@
     </tr>
     <tr>
       <td>
-        <code>first_associated_listing</code>
+        <code>image_url</code>
+      </td>
+      <td>
+        <code>VARCHAR(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>user_id</code>
       </td>
       <td>
         <code>INT FOREIGN KEY</code>
       </td>
       <td>
-        <code>listings.id</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>list_category_name</code>
-      </td>
-      <td>
-        <code>VARCHAR(50)</code>
-      </td>
-      <td>
+        <code>users.id</code>
       </td>
     </tr>
   </tbody>
@@ -418,7 +494,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong>Table 5: <code>hosts</code></strong>
+        <strong>Table 5: <code>users</code></strong>
       </td>
     </tr>
     <tr>
@@ -446,7 +522,47 @@
     </tr>
     <tr>
       <td>
-        <code>superhost</code>
+        <code>name</code>
+      </td>
+      <td>
+        <code>VARCHAR(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>email</code>
+      </td>
+      <td>
+        <code>VARCHAR(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>password</code>
+      </td>
+      <td>
+        <code>VARCHAR(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>is_host</code>
+      </td>
+      <td>
+        <code>TINYINT</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>is_superhost</code>
       </td>
       <td>
         <code>TINYINT</code>
