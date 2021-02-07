@@ -3,7 +3,8 @@ const express = require('express');
 const compression = require('compression');
 
 const app = express();
-const port = 3004;
+// const port = 3004;
+const port = 3014;
 const path = require('path');
 const bodyParser = require('body-parser');
 const controllers = require('./controllers/imageController.js');

@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 // use for proxy server
 // mongodb://localhost/photo_carousel'
-const url = process.env.CONNECTIONSTRING || 'mongodb://localhost/photo_carousel';
+// const url = process.env.CONNECTIONSTRING || 'mongodb://localhost/photo_carousel';
+const url = 'mongodb://localhost:27017/photo_carousel';
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -13,7 +14,7 @@ mongoose.connect(url, {
 const { Schema, connection } = mongoose;
 
 const CarouselSchema = new Schema({
-  _id: Number,
+  id: Number,
   stayList: Array,
   ImgUrls: Array,
 });
