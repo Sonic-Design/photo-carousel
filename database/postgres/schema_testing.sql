@@ -30,7 +30,7 @@ INSERT INTO tt1 (
   12,
   FALSE
 ), (
-  'you eat when I say you eat',
+  'outside of time',
   0,
   FALSE
 );

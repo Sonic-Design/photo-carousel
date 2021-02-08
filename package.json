@@ -8,12 +8,13 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "getData": "node database/seed.js",
+    "getData": "node database/mongo/seed.js",
     "start": "nodemon server/index.js",
     "build": "webpack",
     "watch": "webpack -w",
     "test": "jest --coverage",
-    "docker-start": "node database/seed.js & webpack & node server/index.js"
+    "docker-start": "node database/seed.js & webpack & node server/index.js",
+    "get-img": "node database/postgres/downloadImages.js"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
