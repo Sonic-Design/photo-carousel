@@ -28,3 +28,5 @@ package-lock.json
 bundle.js
 
 database/postgres/seeding/filePaths.js
+
+newrelic.js
