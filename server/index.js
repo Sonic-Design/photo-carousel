@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+require('newrelic');
 const express = require('express');
 const compression = require('compression');
 

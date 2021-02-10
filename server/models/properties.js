@@ -1,6 +1,7 @@
 const db = require('../../database/postgres').client;
+// const db = require('../../database/postgres').pool;
 
-const nearbyQuery = 'SELECT p1.id as origin_property_id, p2.*, u.is_superhost FROM properties p1 INNER JOIN nearby_properties np ON p1.id = np.origin_property_id INNER JOIN properties p2 ON np.nearby_property_id = p2.id INNER JOIN users u ON p2.host_id = u.id WHERE p1.id = $1';
+const nearbyQuery = 'SELECT p1.id AS origin_property_id, p2.*, u.is_superhost FROM properties p1 INNER JOIN nearby_properties np ON p1.id = np.origin_property_id INNER JOIN properties p2 ON np.nearby_property_id = p2.id INNER JOIN users u ON p2.host_id = u.id WHERE p1.id = $1';
 
 const addQuery = 'INSERT INTO properties (average_rating, review_count, bed_count, house_type, nightly_price, image_name, image_description, image_url, host_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
 

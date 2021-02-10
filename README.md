@@ -1,6 +1,6 @@
-# HouseHub
+# Sonic Design Photo Carousel
 
-> A RESTful API that will display home rental information.
+> A RESTful API that will display property rental information.
 
 ## Related Projects
 
@@ -11,193 +11,115 @@
 ## Table of Contents
 
 * [API](#API)
-  * [/api/properties/:propertyId/nearby](#apipropertiespropertyidnearby)
-  * [/api/users/:userId/lists](#apiusersuseridlists)
-  * [/api/users/:userId/lists/:listId](#apiusersuseridlistslistid)
+  * [GET `/api/properties/:propertyId/nearby`](#GET-apipropertiespropertyidnearby)
+  * [POST `/api/properties`](#POST-apiproperties)
 * [Database management system](#Database-management-system)
 * [Database schema](#Database-schema)
   * [Table 1](#Table-1)
   * [Table 2](#Table-2)
   * [Table 3](#Table-3)
+* [Under construction: API](#Under-construction-API)
+  * [POST `/api/users/:userId/lists`](#POST-apiusersuserIdlists)
+  * [POST `/api/users/:userId/lists/:listId`](#POST-apiusersuserIdlistslistId)
+  * [DELETE `/api/users/:userId/lists/:listId`](#DELETE-apiusersuserIdlistslistId)
+* [Under construction: Database schema](#Under-construction-Database-schema)
   * [Table 4](#Table-4)
   * [Table 5](#Table-5)
 * [Legacy](#Legacy)
 
 ## API
 
-### **`/api/properties/:propertyId/nearby`**
+### **GET `/api/properties/:propertyId/nearby`**
 
-* **GET** data for properties that are nearby current property, including whether each nearby property is associated with a list
-  * Route parameter:
-    * ID number for the current property
-  * Request body: n/a
-  * Response:
-    * Fields:
-      * `stayList`
-        * array
-          * `stayId`
-          * `stayName`
-          * `stayPic`
-      * `ImgUrls`
-        * array
-          * `id`
-          * `imgUrl`
-          * `imgName`
-          * `imgDescription`
-          * `HouseType`
-          * `description`
-          * `isSuperHost`
-          * `isLiked`
-          * `AverageRating`
-          * `NumberOfBeds`
-          * `NumOfReviews`
-          * `PricePerNight`
-    * Example:
-      ```json
-      [
+* Operation:
+  * Retrieve data for properties that are nearby current property
+* Route parameter:
+  * `:propertyId`: ID number for the current property
+* Response:
+  * Code on success:
+    * 200
+  * Fields:
+    * `origin_property_id`: Number
+    * `id`: Number
+    * `average_rating`: Number
+    * `review_count`: Number
+    * `bed_count`: Number
+    * `house_type`: String
+    * `nightly_price`: Number
+    * `image_name`: String
+    * `image_description`: String
+    * `image_url`: String
+    * `host_id`: Number
+    * `is_superhost`: Boolean
+  * Example:
+    ```json
+    [
         {
-          "stayList": [
-            {
-              "stayId": 0,
-              "stayName": "Florida",
-              "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
-            },
-            // ...
-          ],
-          "ImgUrls": [
-            {
-              "id": 0,
-              "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
-              "imgName": "Dayna_OReilly",
-              "imgDescription": "Legacy",
-              "HouseType": "ab",
-              "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
-              "isSuperHost": true,
-              "isLiked": false,
-              "AverageRating": "2.42",
-              "NumberOfBeds": 5,
-              "NumOfReviews": 183,
-              "PricePerNight": 171
-            },
-            // ...
-          ],
-          "_id": "601b952e65f325616b41d429",
-          "id": 1,
-          "__v": 0
-        }
-      ]
-      ```
-
-### **`/api/users/:userId/lists`**
-
-* **GET** lists of properties
-  * Route parameter:
-    * User ID number
-  * Request body: n/a
-  * Response:
-    * Fields:
-      * `stayList`
-        * array
-          * `stayId`
-          * `stayName`
-          * `stayPic`
-      * `ImgUrls`
-        * array
-          * `id`
-          * `imgUrl`
-          * `imgName`
-          * `imgDescription`
-          * `HouseType`
-          * `description`
-          * `isSuperHost`
-          * `isLiked`
-          * `AverageRating`
-          * `NumberOfBeds`
-          * `NumOfReviews`
-          * `PricePerNight`
-    * Example:
-      ```json
-      [
+            "origin_property_id": 42,
+            "id": 8452739,
+            "average_rating": "4.11",
+            "review_count": 389,
+            "bed_count": 3,
+            "house_type": "p",
+            "nightly_price": "583.29",
+            "image_name": "Principal",
+            "image_description": "transmit Mobility",
+            "image_url": "https://imgazou.s3-us-west-1.amazonaws.com/img1/img-885.jpg",
+            "host_id": 550159,
+            "is_superhost": false
+        },
         {
-          "stayList": [
-            {
-              "stayId": 0,
-              "stayName": "Florida",
-              "stayPic": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/1/12.webp"
-            },
-            // ...
-          ],
-          "ImgUrls": [
-            {
-              "id": 0,
-              "imgUrl": "https://fec-photos-storage-1.s3-us-west-1.amazonaws.com/2/10.webp",
-              "imgName": "Dayna_OReilly",
-              "imgDescription": "Legacy",
-              "HouseType": "ab",
-              "description": "Molestiae sed eum. Labore sequi sit minima praesentium eos rerum ut voluptatibus voluptatum. Ut cupiditate blanditiis mollitia itaque. Rerum accusantium non et occaecati aspernatur voluptate perferendis.",
-              "isSuperHost": true,
-              "isLiked": false,
-              "AverageRating": "2.42",
-              "NumberOfBeds": 5,
-              "NumOfReviews": 183,
-              "PricePerNight": 171
-            },
-            // ...
-          ],
-          "_id": "601b952e65f325616b41d429",
-          "id": 1,
-          "__v": 0
+            "origin_property_id": 42,
+            "id": 9333283,
+            "average_rating": "2.46",
+            "review_count": 279,
+            "bed_count": 1,
+            "house_type": "n",
+            "nightly_price": "261.06",
+            "image_name": "optimal",
+            "image_description": "morph Connecticut",
+            "image_url": "https://imgazou.s3-us-west-1.amazonaws.com/img1/img-115.jpg",
+            "host_id": 198880,
+            "is_superhost": false
+        },
+        {
+            "origin_property_id": 42,
+            "id": 5647896,
+            "average_rating": "1.82",
+            "review_count": 315,
+            "bed_count": 3,
+            "house_type": "c",
+            "nightly_price": "121.09",
+            "image_name": "North",
+            "image_description": "Kentucky",
+            "image_url": "https://imgazou.s3-us-west-1.amazonaws.com/img1/img-118.jpg",
+            "host_id": 837886,
+            "is_superhost": true
         }
-      ]
-      ```
-* **POST** new list and associate property with list
-  * Route parameter:
-    * User ID number
-  * Request body:
-    ```json
-    {
-      "propertyId": "<property_id>",
-      "name": "<list_name>"
-    }
+    ]
     ```
-  * Response:
-    * Fields:
-      * *TBC*
-    * Example:
-      * *TBC*
 
-### **`/api/users/:userId/lists/:listId`**
+### **POST `/api/properties`**
 
-* **POST** new association between property and list
-  * Route parameters:
-    * User ID number
-    * List ID number
-  * Request body:
-    ```json
-    {
-      "propertyId": "<property_id>"
-    }
-    ```
-  * Response:
-    * Fields:
-      * *TBC*
-    * Example:
-      * *TBC*
-* **DELETE** association between property and list
-  * Route parameters:
-    * User ID number
-    * List ID number
-  * Request body:
-    ```json
-    {
-      "propertyId": "<property_id>"
-    }
-    ```
-  * Response:
-    * Fields:
-      * *TBC*
-    * Example:
-      * *TBC*
+* Operation:
+  * Add new property listing
+* Request body:
+  ```json
+  {
+    "averageRating": "<number>",
+    "reviewCount": "<number>",
+    "bedCount": "<number>",
+    "houseType": "<string>",
+    "nightlyPrice": "<number>",
+    "imageName": "<string>",
+    "imageDescription": "<string>",
+    "imageUrl": "<string>",
+    "hostId": "<number>"
+  }
+  ```
+* Response:
+  * Code on success:
+    * 201
 
 ## Database management system
 
@@ -206,6 +128,91 @@
 ## Database schema
 
 ### Table 1
+
+<table>
+  <thead style="text-align: center">
+    <tr>
+      <td colspan="3">
+        <strong><code>users</code></strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Field</strong>
+      </td>
+      <td>
+        <strong>Type</strong>
+      </td>
+      <td>
+        <strong>Ref</strong>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>id</code>
+      </td>
+      <td>
+        <code>serial PRIMARY KEY</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>name</code>
+      </td>
+      <td>
+        <code>varchar(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>email</code>
+      </td>
+      <td>
+        <code>varchar(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>password</code>
+      </td>
+      <td>
+        <code>varchar(200)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>role</code>
+      </td>
+      <td>
+        <code>varchar(10)</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>is_superhost</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Table 2
 
 <table>
   <thead style="text-align: center">
@@ -232,20 +239,9 @@
         <code>id</code>
       </td>
       <td>
-        <code>INT PRIMARY KEY</code>
+        <code>serial PRIMARY KEY</code>
       </td>
       <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>host_id</code>
-      </td>
-      <td>
-        <code>INT FOREIGN KEY</code>
-      </td>
-      <td>
-        <code>users.id</code>
       </td>
     </tr>
     <tr>
@@ -253,7 +249,7 @@
         <code>average_rating</code>
       </td>
       <td>
-        <code>DECIMAL(1,2)</code>
+        <code>numeric(3,2)</code>
       </td>
       <td>
       </td>
@@ -263,7 +259,7 @@
         <code>review_count</code>
       </td>
       <td>
-        <code>INT</code>
+        <code>int</code>
       </td>
       <td>
       </td>
@@ -273,7 +269,7 @@
         <code>bed_count</code>
       </td>
       <td>
-        <code>INT</code>
+        <code>smallint</code>
       </td>
       <td>
       </td>
@@ -283,7 +279,7 @@
         <code>house_type</code>
       </td>
       <td>
-        <code>VARCHAR(10)</code>
+        <code>varchar(10)</code>
       </td>
       <td>
       </td>
@@ -293,7 +289,7 @@
         <code>nightly_price</code>
       </td>
       <td>
-        <code>DECIMAL(5,2)</code>
+        <code>numeric(7,2)</code>
       </td>
       <td>
       </td>
@@ -303,7 +299,7 @@
         <code>image_name</code>
       </td>
       <td>
-        <code>VARCHAR(50)</code>
+        <code>varchar(50)</code>
       </td>
       <td>
       </td>
@@ -313,7 +309,7 @@
         <code>image_description</code>
       </td>
       <td>
-        <code>VARCHAR(200)</code>
+        <code>varchar(200)</code>
       </td>
       <td>
       </td>
@@ -323,15 +319,26 @@
         <code>image_url</code>
       </td>
       <td>
-        <code>VARCHAR(200)</code>
+        <code>varchar(200)</code>
       </td>
       <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>host_id</code>
+      </td>
+      <td>
+        <code>int REFERENCES</code>
+      </td>
+      <td>
+        <code>users(id)</code>
       </td>
     </tr>
   </tbody>
 </table>
 
-### Table 2
+### Table 3
 
 <table>
   <thead style="text-align: center">
@@ -358,20 +365,9 @@
         <code>id</code>
       </td>
       <td>
-        <code>INT PRIMARY KEY</code>
+        <code>serial PRIMARY KEY</code>
       </td>
       <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>nearby_property_id</code>
-      </td>
-      <td>
-        <code>INT</code>
-      </td>
-      <td>
-        (<code>properties.id</code>)
       </td>
     </tr>
     <tr>
@@ -379,71 +375,92 @@
         <code>origin_property_id</code>
       </td>
       <td>
-        <code>INT FOREIGN KEY</code>
+        <code>int REFERENCES</code>
       </td>
       <td>
-        <code>properties.id</code>
+        <code>properties(id)</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>nearby_property_id</code>
+      </td>
+      <td>
+        <code>int REFERENCES</code>
+      </td>
+      <td>
+        <code>properties(id)</code>
       </td>
     </tr>
   </tbody>
 </table>
 
-### Table 3
+## Under construction: API
 
-<table>
-  <thead style="text-align: center">
-    <tr>
-      <td colspan="3">
-        <strong><code>properties_lists</code></strong>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Field</strong>
-      </td>
-      <td>
-        <strong>Type</strong>
-      </td>
-      <td>
-        <strong>Ref</strong>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>id</code>
-      </td>
-      <td>
-        <code>INT PRIMARY KEY</code>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>property_id</code>
-      </td>
-      <td>
-        <code>INT FOREIGN KEY</code>
-      </td>
-      <td>
-        <code>properties.id</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>list_id</code>
-      </td>
-      <td>
-        <code>INT FOREIGN KEY</code>
-      </td>
-      <td>
-        <code>lists.id</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
+### **GET `/api/users/:userId/lists`**
+
+* Operation:
+  * Retrieve lists of properties
+* Route parameter:
+  * `:userId`: User ID number
+* Response:
+  * Code on success:
+    * 200
+  * Fields:
+    * *(under construction)*
+
+### **POST `/api/users/:userId/lists`**
+
+* Operation:
+  * Add new list and associate property with list
+* Route parameter:
+  * `:userId`: User ID number
+* Request body:
+  ```json
+  {
+    "name": "<string>",
+    "propertyId": "<number>"
+  }
+  ```
+* Response:
+  * Code on success:
+    * 201
+
+### **POST `/api/users/:userId/lists/:listId`**
+
+* Operation:
+  * Add new association between property and list
+* Route parameters:
+  * `:userId`: User ID number
+  * `:listId`: List ID number
+* Request body:
+  ```json
+  {
+    "propertyId": "<number>"
+  }
+  ```
+* Response:
+  * Code on success:
+    * 201
+
+### **DELETE `/api/users/:userId/lists/:listId`**
+
+* Operation:
+  * Remove association between property and list
+* Route parameters:
+  * `:userId`: User ID number
+  * `:listId`: List ID number
+* Request body:
+  ```json
+  {
+    "propertyId": "<number>"
+  }
+  ```
+* Response:
+  * Code on success:
+    * 204
+
+## Under construction: Database schema
 
 ### Table 4
 
@@ -472,7 +489,7 @@
         <code>id</code>
       </td>
       <td>
-        <code>INT PRIMARY KEY</code>
+        <code>serial PRIMARY KEY</code>
       </td>
       <td>
       </td>
@@ -482,7 +499,7 @@
         <code>name</code>
       </td>
       <td>
-        <code>VARCHAR(50)</code>
+        <code>varchar(50)</code>
       </td>
       <td>
       </td>
@@ -492,7 +509,7 @@
         <code>image_url</code>
       </td>
       <td>
-        <code>VARCHAR(200)</code>
+        <code>varchar(200)</code>
       </td>
       <td>
       </td>
@@ -502,10 +519,10 @@
         <code>user_id</code>
       </td>
       <td>
-        <code>INT FOREIGN KEY</code>
+        <code>int REFERENCES</code>
       </td>
       <td>
-        <code>users.id</code>
+        <code>users(id)</code>
       </td>
     </tr>
   </tbody>
@@ -517,7 +534,7 @@
   <thead style="text-align: center">
     <tr>
       <td colspan="3">
-        <strong><code>users</code></strong>
+        <strong><code>properties_lists</code></strong>
       </td>
     </tr>
     <tr>
@@ -538,59 +555,31 @@
         <code>id</code>
       </td>
       <td>
-        <code>INT PRIMARY KEY</code>
+        <code>serial PRIMARY KEY</code>
       </td>
       <td>
       </td>
     </tr>
     <tr>
       <td>
-        <code>name</code>
+        <code>property_id</code>
       </td>
       <td>
-        <code>VARCHAR(200)</code>
+        <code>int REFERENCES</code>
       </td>
       <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>email</code>
-      </td>
-      <td>
-        <code>VARCHAR(200)</code>
-      </td>
-      <td>
+        <code>properties(id)</code>
       </td>
     </tr>
     <tr>
       <td>
-        <code>password</code>
+        <code>list_id</code>
       </td>
       <td>
-        <code>VARCHAR(200)</code>
+        <code>int REFERENCES</code>
       </td>
       <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>is_host</code>
-      </td>
-      <td>
-        <code>TINYINT</code>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>is_superhost</code>
-      </td>
-      <td>
-        <code>TINYINT</code>
-      </td>
-      <td>
+        <code>lists(id)</code>
       </td>
     </tr>
   </tbody>
