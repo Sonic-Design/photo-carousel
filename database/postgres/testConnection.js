@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const { Client } = require('pg');
 
 // const connectAndQuery = async () => {
