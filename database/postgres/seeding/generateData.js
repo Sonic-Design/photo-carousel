@@ -3,11 +3,41 @@
 const faker = require('faker');
 const fs = require('fs');
 const path = require('path');
-const filePaths = require('./filePaths.js');
+// const filePaths = require('./filePaths.js');
+const importData = require('./importData.js');
 
-const TARGET_PATH = filePaths.csvs;
-const PRERATIO_RECORDS_PER_FILE = 100000;
-const FILE_COUNT = 10;
+const confirmPath = (dirPath) => {
+  const directories = dirPath.split('/');
+  if (directories[0].length === 0) {
+    directories.shift();
+  }
+  const checkAndCreateDirs = (pathOfDirs) => {
+    const modifiedPathOfDirs = pathOfDirs.slice();
+    if (modifiedPathOfDirs.length === 1) {
+      return modifiedPathOfDirs[0];
+    }
+    if (modifiedPathOfDirs[0].charAt(0) !== '/') {
+      modifiedPathOfDirs[0] = `/${modifiedPathOfDirs[0]}`;
+    } else {
+      modifiedPathOfDirs[0] += `/${modifiedPathOfDirs.splice(1, 1)}`;
+    }
+    if (!fs.existsSync(modifiedPathOfDirs[0])) {
+      fs.mkdirSync(modifiedPathOfDirs[0]);
+    }
+    return checkAndCreateDirs(modifiedPathOfDirs);
+  };
+  return checkAndCreateDirs(directories);
+};
+
+// const TARGET_PATH = filePaths.csvs;
+const TARGET_PATH = confirmPath(path.join(process.env.HOME, '/Documents/Dev/_Hack Reactor/_HRSF132/Sprints/SDC/genData'));
+// const RATIO_MULTIPLIER = 1000000;
+const RATIO_MULTIPLIER = 10;
+// const MAX_RECORDS_PER_FILE = 1000000;
+const MAX_RECORDS_PER_FILE = 1000;
+
+// const PRERATIO_RECORDS_PER_FILE = 100000;
+// const FILE_COUNT = 10;
 
 const tables = [
   {
@@ -25,6 +55,8 @@ const tables = [
       'id_users',
     ],
     recordCountRatio: 10,
+    // fileCount: (this.recordCountRatio * RATIO_MULTIPLIER) / MAX_RECORDS_PER_FILE,
+    // recordsPerFile: (this.recordCountRatio * RATIO_MULTIPLIER) / this.fileCount,
   },
   {
     name: 'nearby_properties',
@@ -67,6 +99,13 @@ const tables = [
   //   recordCountRatio: 15,
   // },
 ];
+
+const appendFileAndRecordCounts = (tableList) => {
+  tableList.forEach((table) => {
+    table.fileCount = (table.recordCountRatio * RATIO_MULTIPLIER) / MAX_RECORDS_PER_FILE;
+    table.recordsPerFile = (table.recordCountRatio * RATIO_MULTIPLIER) / table.fileCount;
+  });
+};
 
 let dirName = '';
 
@@ -128,7 +167,8 @@ const getRandom = {
         break;
       }
     }
-    const maxId = PRERATIO_RECORDS_PER_FILE * FILE_COUNT * tables[tableIndex].recordCountRatio;
+    // const maxId = PRERATIO_RECORDS_PER_FILE * FILE_COUNT * tables[tableIndex].recordCountRatio;
+    const maxId = tables[tableIndex].fileCount * tables[tableIndex].recordsPerFile;
     return Math.ceil(Math.random() * maxId);
   },
 };
@@ -143,6 +183,7 @@ const writeRecords = (
   recordCount,
   recordTypes,
   filename,
+  fileCount,
 ) => {
   let recordsWritten = 0;
   const writeFile = () => {
@@ -186,7 +227,7 @@ const writeRecords = (
         console.log(`${filename} COMPLETE`);
         fileWriter.write(record, 'utf-8', () => {
           fileWriter.end();
-          handleNextAction();
+          handleNextAction(fileCount);
         });
       }
     }
@@ -201,7 +242,9 @@ const createCsvFile = ({
   name,
   header,
   recordTypes,
-  recordCountRatio,
+  // recordCountRatio,
+  fileCount,
+  recordsPerFile,
 }) => {
   const filename = `${name}${status.filesWritten}.csv`;
   const writeSpecificCsvFile = writeCsvFile(
@@ -212,15 +255,18 @@ const createCsvFile = ({
   );
   writeRecords(
     writeSpecificCsvFile,
-    (PRERATIO_RECORDS_PER_FILE * recordCountRatio),
+    // (PRERATIO_RECORDS_PER_FILE * recordCountRatio),
+    recordsPerFile,
     recordTypes,
     filename,
+    fileCount,
   );
 };
 
-const handleNextAction = () => {
+const handleNextAction = (fileCount) => {
   status.filesWritten += 1;
-  if (status.filesWritten >= FILE_COUNT) {
+  // if (status.filesWritten >= FILE_COUNT) {
+  if (status.filesWritten >= fileCount) {
     status.tablesWritten += 1;
     status.filesWritten = 0;
   }
@@ -228,6 +274,8 @@ const handleNextAction = () => {
     createCsvFile(tables[status.tablesWritten]);
   }
 };
+
+appendFileAndRecordCounts(tables);
 
 createDir();
 

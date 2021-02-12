@@ -31,11 +31,12 @@ export default function () {
   const propertyId = Math.ceil(Math.random() * 10000000);
   let req1 = {
     method: 'GET',
-    url: `http://localhost:3014/api/properties/${propertyId}/nearby`,
+    url: `http://localhost:3004/api/properties/${propertyId}/nearby`,
   };
+
   let req2 = {
     method: 'POST',
-    url: 'http://localhost:3014/api/properties',
+    url: 'http://localhost:3004/api/properties',
     body: {
       averageRating: '4.27',
       reviewCount: '139',
@@ -51,13 +52,27 @@ export default function () {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     },
   };
+
+  // Check GET and POST
   let responses = http.batch([req1, req2]);
-  // let responses = http.batch([req1]);
   check(responses[0], {
     'status was 200': (res) => res.status == 200,
   }) || errorRate.add(1);
   check(responses[1], {
     'row was inserted': (res) => JSON.parse(res.body).rowCount == 1,
   }) || errorRate.add(1);
+
+  // Check GET only
+  // let responses = http.batch([req1]);
+  // check(responses[0], {
+  //   'status was 200': (res) => res.status == 200,
+  // }) || errorRate.add(1);
+
+  // Check POST only
+  // let responses = http.batch([req2]);
+  // check(responses[0], {
+  //   'row was inserted': (res) => JSON.parse(res.body).rowCount == 1,
+  // }) || errorRate.add(1);
+
   sleep(1);
 }
