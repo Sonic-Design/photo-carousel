@@ -28,11 +28,25 @@ const confirmPath = (dirPath) => {
   return checkAndCreateDirs(directories);
 };
 
+// const MODE = 'generate data only';
+const MODE = 'generate data and build database';
 const TARGET_PATH = confirmPath(path.join(process.env.HOME, '/Documents/Dev/_Hack Reactor/_HRSF132/Sprints/SDC/genData'));
 const RATIO_MULTIPLIER = 1000000;
-const MAX_RECORDS_PER_FILE = 1000000;
+const MAX_RECORDS_PER_FILE = 100000;
 
 const tables = [
+  {
+    name: 'users',
+    header: 'name;email;password;role;is_superhost\n',
+    recordTypes: [
+      'name.findName',
+      'internet.email',
+      'internet.password',
+      'role',
+      'random.boolean',
+    ],
+    recordCountRatio: 1,
+  },
   {
     name: 'properties',
     header: 'average_rating;review_count;bed_count;house_type;nightly_price;image_name;image_description;image_url;host_id\n',
@@ -58,18 +72,6 @@ const tables = [
     ],
     recordCountRatio: 50,
   },
-  {
-    name: 'users',
-    header: 'name;email;password;role;is_superhost\n',
-    recordTypes: [
-      'name.findName',
-      'internet.email',
-      'internet.password',
-      'role',
-      'random.boolean',
-    ],
-    recordCountRatio: 1,
-  },
   // {
   //   name: 'lists',
   //   header: 'name;image_url;user_id\n',
@@ -93,8 +95,10 @@ const tables = [
 
 const appendFileAndRecordCounts = (tableList) => {
   tableList.forEach((table) => {
-    table.fileCount = (table.recordCountRatio * RATIO_MULTIPLIER) / MAX_RECORDS_PER_FILE;
-    table.recordsPerFile = (table.recordCountRatio * RATIO_MULTIPLIER) / table.fileCount;
+    table.fileCount = (table.recordCountRatio * RATIO_MULTIPLIER) / MAX_RECORDS_PER_FILE >= 1
+      ? Math.ceil((table.recordCountRatio * RATIO_MULTIPLIER) / MAX_RECORDS_PER_FILE)
+      : 1;
+    table.recordsPerFile = Math.ceil((table.recordCountRatio * RATIO_MULTIPLIER) / table.fileCount);
   });
 };
 
@@ -208,16 +212,16 @@ const writeRecords = (
         record += `${data};`;
       });
       record = `${record.slice(0, record.length - 1)}\n`;
-      if (recordsWritten % 50000 === 0) {
+      if (recordsWritten % Math.ceil(MAX_RECORDS_PER_FILE / 20) === 0) {
         console.log(`${recordsWritten} records written to ${filename}`);
       }
       if (recordsWritten < recordCount) {
         ableToContinue = fileWriter.write(record, 'utf-8');
       } else if (recordsWritten === recordCount) {
-        console.log(`${filename} COMPLETE`);
+        console.log(`${filename} CREATION COMPLETE`);
         fileWriter.write(record, 'utf-8', () => {
           fileWriter.end();
-          handleNextAction(fileCount);
+          handleNextAction(filename, fileCount);
         });
       }
     }
@@ -251,14 +255,33 @@ const createCsvFile = ({
   );
 };
 
-const handleNextAction = (fileCount) => {
-  status.filesWritten += 1;
-  if (status.filesWritten >= fileCount) {
-    status.tablesWritten += 1;
-    status.filesWritten = 0;
-  }
-  if (status.tablesWritten < tables.length) {
-    createCsvFile(tables[status.tablesWritten]);
+const handleNextAction = (filename, fileCount) => {
+  const takeNextAction = () => {
+    status.filesWritten += 1;
+    if (status.filesWritten >= fileCount) {
+      status.tablesWritten += 1;
+      status.filesWritten = 0;
+    }
+    if (status.tablesWritten < tables.length) {
+      createCsvFile(tables[status.tablesWritten]);
+    } else {
+      console.log('\nData generation process complete!\n');
+      process.exit(0);
+    }
+  };
+  if (MODE === 'generate data only') {
+    takeNextAction();
+  } else if (MODE === 'generate data and build database') {
+    const tableName = tables[status.tablesWritten].name;
+    const filePath = path.join(TARGET_PATH, dirName, filename);
+    importData.handleInsertRecords(tableName, filePath, (err, res, database) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(`${filename} successfully imported into ${database}: ${tableName}`);
+        takeNextAction();
+      }
+    });
   }
 };
 
@@ -266,4 +289,14 @@ appendFileAndRecordCounts(tables);
 
 createDir();
 
-createCsvFile(tables[status.tablesWritten]);
+if (MODE === 'generate data only') {
+  createCsvFile(tables[status.tablesWritten]);
+} else if (MODE === 'generate data and build database') {
+  importData.restartTables((err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      createCsvFile(tables[status.tablesWritten]);
+    }
+  });
+}

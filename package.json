@@ -15,7 +15,8 @@
     "test": "jest --coverage",
     "docker-start": "node database/mongo/seed.js && webpack && node server/index.js",
     "get-img": "node database/postgres/seeding/downloadImages.js",
-    "gen-data": "node database/postgres/seeding/generateData.js"
+    "gen-data": "node database/postgres/seeding/generateData.js",
+    "test-import": "node database/postgres/seeding/importData.js"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
