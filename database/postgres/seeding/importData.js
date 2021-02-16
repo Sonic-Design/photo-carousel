@@ -52,11 +52,27 @@ const queries = {
     origin_property_id int REFERENCES properties (id),
     nearby_property_id int REFERENCES properties (id)
   );`,
-  // insertRecords: `COPY $1 ($2)
-  // FROM '$3'
-  // DELIMITER ';'
-  // CSV HEADER;`,
 };
+/*
+When running on underpowered hardware,
+remove FK constraints from above definitions and
+instead add constraints after columns are fully populated:
+
+ALTER TABLE properties
+ADD CONSTRAINT constraint_fk_host
+FOREIGN KEY (host_id)
+REFERENCES users(id);
+
+ALTER TABLE nearby_properties
+ADD CONSTRAINT constraint_fk_origin
+FOREIGN KEY (origin_property_id)
+REFERENCES properties(id);
+
+ALTER TABLE nearby_properties
+ADD CONSTRAINT constraint_fk_nearby
+FOREIGN KEY (nearby_property_id)
+REFERENCES properties(id);
+*/
 
 const insertRecords = (placeholderValues, callback) => {
   pool.connect((err, client, done) => {
@@ -65,12 +81,10 @@ const insertRecords = (placeholderValues, callback) => {
     } else {
       const { database } = client.connectionParameters;
       const [tableName, fieldNames, filePath] = placeholderValues;
-      // client.query(queries.insertRecords, placeholderValues, (err, res) => {
-      client.query(`COPY ${tableName}(${fieldNames})
+      client.query(`\COPY ${tableName}(${fieldNames})
       FROM '${filePath}'
       DELIMITER ';'
       CSV HEADER;`, null, (err, res) => {
-      // CSV HEADER;`, placeholderValues, (err, res) => {
         done();
         if (err) {
           callback(err);
@@ -87,7 +101,6 @@ const createTables = (callback) => {
     if (err) {
       callback(err);
     } else {
-      // console.log(`createTables successfully connected to PostgreSQL database ${client.connectionParameters.database}`);
       client.query(queries.createTables, null, (err, res) => {
         done();
         if (err) {
@@ -105,7 +118,6 @@ const dropTables = (callback) => {
     if (err) {
       callback(err);
     } else {
-      // console.log(`dropTables successfully connected to PostgreSQL database ${client.connectionParameters.database}`);
       client.query(queries.dropTables, null, (err, res) => {
         done();
         if (err) {
@@ -123,8 +135,6 @@ module.exports.restartTables = (callback) => {
     if (err) {
       callback(err);
     } else {
-      // console.log('Successfully ran restartTables');
-      // console.log(res);
       callback(null, res);
     }
   });

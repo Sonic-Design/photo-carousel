@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 
+app.use('/loaderio-e43fd610bd1010cd1cd35f11e029652e', express.static(path.join(__dirname, '../loaderio')));
 app.use('/:id/bundle', express.static(path.join(__dirname, '../public/bundle.js')));
 app.use('/:id', express.static(path.join(__dirname, '../public')));
 

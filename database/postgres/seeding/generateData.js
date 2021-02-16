@@ -31,8 +31,8 @@ const confirmPath = (dirPath) => {
 // const MODE = 'generate data only';
 const MODE = 'generate data and build database';
 const TARGET_PATH = confirmPath(path.join(process.env.HOME, '/Documents/Dev/_Hack Reactor/_HRSF132/Sprints/SDC/genData'));
-const RATIO_MULTIPLIER = 1000000;
-const MAX_RECORDS_PER_FILE = 100000;
+const RATIO_MULTIPLIER = 1;
+const MAX_RECORDS_PER_FILE = 100;
 
 const tables = [
   {
