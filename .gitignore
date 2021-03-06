@@ -28,5 +28,8 @@ package-lock.json
 bundle.js
 
 database/postgres/seeding/filePaths.js
+database/postgres/ec2Config.js
 
 newrelic.js
+
+loaderio*

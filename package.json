@@ -13,9 +13,11 @@
     "build": "webpack",
     "watch": "webpack -w",
     "test": "jest --coverage",
-    "docker-start": "node database/seed.js & webpack & node server/index.js",
+    "docker-start": "node database/mongo/seed.js && webpack && node server/index.js",
+    "pg-docker-start": "webpack && node server/index.js",
     "get-img": "node database/postgres/seeding/downloadImages.js",
-    "create-csvs": "node database/postgres/seeding/createCsvFiles.js"
+    "gen-data": "node database/postgres/seeding/generateData.js",
+    "test-import": "node database/postgres/seeding/importData.js"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
